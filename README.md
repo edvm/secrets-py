@@ -17,15 +17,25 @@ If you find this project useful, consider supporting its development:
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Donate-blue?style=social)](https://ko-fi.com/edvmfoss)
 
 
-## Installation and Setup
+## Run API on three simple steps 
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Python 3.10 or higher and `make` installed.
 
-Install `uv` (Linux and MacOS)
+1- Install `uv` (Linux and MacOS)
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+2- Run `make isntall` to install dependencies.
+```bash
+make install
+```
+
+3- Run `make run` to start the API server.
+```bash
+make run
 ```
 
 ### Getting Started
@@ -33,7 +43,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 Clone the repository:
 
 ```bash
-git clone git@github.com:edvm/secrets-py.git
+git clone https://github.com/edvm/secrets-py.git
 cd secrets-py 
 ```
 

@@ -1,10 +1,11 @@
 site_name: topsecret
 repo_url: https://github.com/edvm/topsecret
-site_url: https://edvm.github.io/topsecret
+repo_url: https://github.com/edvm/secrets-py.git
+site_url: https://github.com/edvm/secrets-py.git
 site_description: topsecret
-site_author: edvm 
+site_author: Emiliano Dalla Verde Marcozzi 
 edit_uri: edit/main/docs/
-repo_name: edvm/topsecret
+repo_name: edvm/secrets-py
 copyright: Maintained by <a href="https://github.com/edvm/">edvm</a>.
 
 nav:
