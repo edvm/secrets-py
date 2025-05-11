@@ -31,7 +31,7 @@ def test_encrypt_without_passphrase(client):
     data = response.json()
     assert "hash" in data
     assert "decrypt_url" in data
-    assert data["decrypt_url"].endswith(f"/decrypt/{data['hash']}")
+    assert data["decrypt_url"].endswith(f"{data['hash']}")
 
 
 def test_encrypt_with_passphrase(client):
@@ -54,7 +54,7 @@ def test_decrypt_without_passphrase(client):
     encrypt_response = client.post("/encrypt", json={"secret": "my test secret"})
     hash_value = encrypt_response.json()["hash"]
 
-    decrypt_response = client.get(f"/decrypt/{hash_value}")
+    decrypt_response = client.post(f"/decrypt/{hash_value}", data=None)
     assert decrypt_response.status_code == 200
     assert decrypt_response.json()["secret"] == "my test secret"  # noqa: S105
 
