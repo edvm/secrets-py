@@ -28,7 +28,7 @@ If you find this project useful, consider supporting its development:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-2- Run `make isntall` to install dependencies.
+2- Run `make install` to install dependencies.
 ```bash
 make install
 ```

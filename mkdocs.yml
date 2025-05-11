@@ -1,4 +1,4 @@
-site_name: topsecret
+site_name: TopSecret Documentation
 repo_url: https://github.com/edvm/topsecret
 repo_url: https://github.com/edvm/secrets-py.git
 site_url: https://github.com/edvm/secrets-py.git
@@ -10,7 +10,8 @@ copyright: Maintained by <a href="https://github.com/edvm/">edvm</a>.
 
 nav:
   - Home: index.md
-  - Modules: modules.md
+  - API Modules: modules.md
+docs_dir: docs
 plugins:
   - search
   - mkdocstrings:
