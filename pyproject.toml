@@ -19,7 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "cryptography>=44.0.2",
-    "fastapi>=0.115.12",
+    "fastapi[standard]>=0.115.12",
     "uvicorn>=0.34.0",
 ]
 
