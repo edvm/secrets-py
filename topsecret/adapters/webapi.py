@@ -1,6 +1,6 @@
 import os
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Body, Depends, FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -85,9 +85,11 @@ async def encrypt_secret(request: EncryptRequest, base_url: str = Depends(get_ba
     return EncryptResponse(hash=hash_value, decrypt_url=decrypt_url)
 
 
-@api.get("/decrypt/{hash_value}", response_model=DecryptResponse, tags=["decryption"])
-async def decrypt_secret(hash_value: str, passphrase: str | None = None) -> DecryptResponse:
+@api.post("/decrypt/{hash_value}", response_model=DecryptResponse, tags=["decryption"])
+async def decrypt_secret(hash_value: str, request: DecryptRequest = Body(default=None)) -> DecryptResponse:
     """Decrypt a secret."""
+    passphrase = None if request is None else request.passphrase
+    
     try:
         decrypted_text = app.encryption_service.decrypt(hash_value, passphrase)
         return DecryptResponse(secret=decrypted_text)

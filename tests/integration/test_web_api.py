@@ -64,7 +64,7 @@ def test_decrypt_with_passphrase(client):
     encrypt_response = client.post("/encrypt", json={"secret": "protected secret", "passphrase": "mypass"})
     hash_value = encrypt_response.json()["hash"]
 
-    decrypt_response = client.get(f"/decrypt/{hash_value}?passphrase=mypass")
+    decrypt_response = client.post(f"/decrypt/{hash_value}", json={"passphrase": "mypass"})
     assert decrypt_response.status_code == 200
     assert decrypt_response.json()["secret"] == "protected secret"  # noqa: S105
 
@@ -75,7 +75,7 @@ def test_decrypt_with_wrong_passphrase(client):
     encrypt_response = client.post("/encrypt", json={"secret": "protected secret", "passphrase": "correct"})
     hash_value = encrypt_response.json()["hash"]
 
-    decrypt_response = client.get(f"/decrypt/{hash_value}?passphrase=wrong")
+    decrypt_response = client.post(f"/decrypt/{hash_value}", json={"passphrase": "wrong"})
     assert decrypt_response.status_code == 401
     assert "Invalid passphrase" in decrypt_response.json()["detail"]
 
@@ -85,14 +85,14 @@ def test_decrypt_missing_passphrase(client):
     encrypt_response = client.post("/encrypt", json={"secret": "need passphrase", "passphrase": "required"})
     hash_value = encrypt_response.json()["hash"]
 
-    decrypt_response = client.get(f"/decrypt/{hash_value}")
+    decrypt_response = client.post(f"/decrypt/{hash_value}", json={})
     assert decrypt_response.status_code == 401
     assert "Passphrase required for decryption" in decrypt_response.json()["detail"]
 
 
 def test_decrypt_nonexistent_hash(client):
     """Test decrypting a hash that doesn't exist."""
-    response = client.get("/decrypt/nonexistenthash12345")
+    response = client.post("/decrypt/nonexistenthash12345", json={})
     assert response.status_code == 401
     assert "Ciphertext not found in storage." in response.json()["detail"]
 
