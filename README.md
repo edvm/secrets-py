@@ -78,7 +78,16 @@ After installation, start the API server:
 make run
 ```
 
-The API will be available at http://localhost:8000.
+The API will be available at http://localhost:8000.o
+
+### Running with Docker Compose
+If you prefer to run the API using Docker Compose, you can use the provided `compose.yml` file.
+1. Build and run the Docker container:
+
+```bash
+docker compose up --build
+```
+2. Access the API at http://localhost:8000.
 
 ## Testing the API
 
