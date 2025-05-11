@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
@@ -18,7 +17,7 @@ static_dir = os.path.join(parent_dir, "static")
 
 api.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-# TODO: Would be nice if this settings could be set in a config file
+# TODO: move this to config 
 MAX_SECRET_LENGTH = 4096
 
 
@@ -54,7 +53,7 @@ def get_base_url(request: Request) -> str:
 
 
 def get_theme_path(name: str) -> str:
-    """Determine the path to the HTML theme."""
+    """Get path to the HTML skin/theme."""
     filename = os.path.basename(name)
     theme_name = filename + ".html"
 
@@ -97,7 +96,7 @@ async def decrypt_secret(hash_value: str, passphrase: str | None = None) -> Decr
 
 
 @api.get("/", response_class=HTMLResponse, tags=["ui"])
-async def root(theme: Optional[str] = None) -> str:
+async def root(theme: str | None = None) -> str:
     """Serve the HTML frontend."""
     theme = theme or "default"
     html_path = get_theme_path(theme)
