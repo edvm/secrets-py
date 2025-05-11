@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TopSecret - Secure Encryption</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#14b8a6',
+                        accent: '#f97316',
+                        dark: '#1e293b',
+                    },
+                    fontFamily: {
+                        'spy': ['"Black Ops One"', 'cursive'],
+                        'mono': ['"Roboto Mono"', 'monospace'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'redacted': 'redacted 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        redacted: {
+                            '0%, 100%': { opacity: '0.9' },
+                            '50%': { opacity: '0.7' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(-45deg, #6366f1, #14b8a6, #f97316, #ec4899);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        .glass {
+            backdrop-filter: blur(16px);
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .classified-text {
+            text-shadow: 0 0 5px rgba(99, 102, 241, 0.8), 0 0 10px rgba(20, 184, 166, 0.4);
+            letter-spacing: 2px;
+            position: relative;
+        }
+        .classified-text::before {
+            content: "TOP SECRET";
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%) rotate(-5deg);
+            font-size: 0.8rem;
+            background: #f97316;
+            padding: 0.2rem 1rem;
+            border-radius: 2px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: bold;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+        .top-secret-highlight {
+            background: linear-gradient(45deg, #ff4500, #ff0066);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 4s ease infinite;
+            display: inline-block;
+            position: relative;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-white font-sans">
+    <div class="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl md:text-7xl font-spy mb-6 pt-8 relative">
+                <span class="top-secret-highlight classified-text">Top Secret</span>
+            </h1>
+            <p class="text-xl opacity-80 animate-pulse-slow font-mono">Secure Encryption for Your Sensitive Data</p>
+        </header>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Encrypt Card -->
+            <div class="glass rounded-2xl p-8 card-hover opacity-0 translate-y-10" id="encrypt-card">
+                <h2 class="text-3xl font-bold mb-6 flex items-center">
+                    <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    Encrypt Message
+                </h2>
+                <form id="encryptForm" class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="block font-medium">Your Secret Message</label>
+                        <textarea id="secret" rows="4" class="w-full bg-dark/30 rounded-lg p-3 focus:ring-2 focus:ring-primary outline-none transition resize-none" placeholder="Enter the message you want to encrypt..."></textarea>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block font-medium">Passphrase (Optional)</label>
+                        <input type="password" id="encryptPassphrase" class="w-full bg-dark/30 rounded-lg p-3 focus:ring-2 focus:ring-primary outline-none transition" placeholder="Add a passphrase for extra security">
+                    </div>
+                    <button type="submit" class="w-full bg-primary hover:bg-primary/80 font-bold py-3 px-6 rounded-lg transition transform hover:scale-[1.02]">
+                        Encrypt Now
+                    </button>
+                </form>
+                
+                <div id="encryptResult" class="mt-8 hidden rounded-lg bg-dark/30 p-6 border border-primary/30">
+                    <h3 class="text-xl font-bold mb-3 text-primary">Encryption Successful!</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm opacity-70 mb-1">Hash:</p>
+                            <p id="encryptedHash" class="font-mono bg-dark/40 p-3 rounded overflow-x-auto"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm opacity-70 mb-1">Decrypt URL:</p>
+                            <p id="decryptUrl" class="font-mono bg-dark/40 p-3 rounded overflow-x-auto text-secondary"></p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button id="copyHash" class="bg-dark/50 hover:bg-dark/70 py-2 px-4 rounded transition">
+                                Copy Hash
+                            </button>
+                            <button id="copyDecryptUrl" class="bg-secondary hover:bg-secondary/80 py-2 px-4 rounded transition">
+                                Copy URL
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Decrypt Card -->
+            <div class="glass rounded-2xl p-8 card-hover opacity-0 translate-y-10" id="decrypt-card">
+                <h2 class="text-3xl font-bold mb-6 flex items-center">
+                    <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                    </svg>
+                    Decrypt Message
+                </h2>
+                <form id="decryptForm" class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="block font-medium">Hash Value</label>
+                        <input type="text" id="hashValue" class="w-full bg-dark/30 rounded-lg p-3 focus:ring-2 focus:ring-accent outline-none transition" placeholder="Enter the hash to decrypt">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block font-medium">Passphrase (If Required)</label>
+                        <input type="password" id="decryptPassphrase" class="w-full bg-dark/30 rounded-lg p-3 focus:ring-2 focus:ring-accent outline-none transition" placeholder="Enter the passphrase if needed">
+                    </div>
+                    <button type="submit" class="w-full bg-accent hover:bg-accent/80 font-bold py-3 px-6 rounded-lg transition transform hover:scale-[1.02]">
+                        Decrypt Message
+                    </button>
+                </form>
+                
+                <div id="decryptResult" class="mt-8 hidden rounded-lg bg-dark/30 p-6 border border-accent/30">
+                    <h3 class="text-xl font-bold mb-3 text-accent">Secret Revealed!</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm opacity-70 mb-1">Decrypted Message:</p>
+                            <div class="bg-dark/40 p-4 rounded">
+                                <p id="decryptedSecret" class="whitespace-pre-wrap"></p>
+                            </div>
+                        </div>
+                        <button id="copySecret" class="bg-accent hover:bg-accent/80 py-2 px-4 rounded transition">
+                            Copy Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="mt-16 text-center opacity-60 text-sm">
+            <p>TopSecret Encryption Tool • Secure by Design</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Animate cards on load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check for hash in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const hashFromUrl = urlParams.get('hash');
+            
+            if (hashFromUrl) {
+                // If hash is present, hide encrypt card and show only decrypt card
+                const encryptCard = document.getElementById('encrypt-card');
+                encryptCard.classList.add('hidden');
+                
+                document.getElementById('decrypt-card').classList.add('opacity-100', 'translate-y-0', 'transition-all', 'duration-700');
+                document.getElementById('hashValue').value = hashFromUrl;
+                document.getElementById('decryptPassphrase').focus();
+            } else {
+                // Normal animation when no hash is present
+                setTimeout(() => {
+                    document.getElementById('encrypt-card').classList.add('opacity-100', 'translate-y-0', 'transition-all', 'duration-700');
+                }, 100);
+                
+                setTimeout(() => {
+                    document.getElementById('decrypt-card').classList.add('opacity-100', 'translate-y-0', 'transition-all', 'duration-700');
+                }, 300);
+            }
+        });
+
+        // Encrypt form handling
+        document.getElementById('encryptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const secret = document.getElementById('secret').value.trim();
+            const passphrase = document.getElementById('encryptPassphrase').value || null;
+            
+            if (!secret) {
+                alert('Please enter a secret message to encrypt');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/encrypt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ secret, passphrase }),
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('encryptedHash').textContent = data.hash;
+                    document.getElementById('decryptUrl').textContent = data.decrypt_url;
+                    
+                    const resultElement = document.getElementById('encryptResult');
+                    resultElement.classList.remove('hidden');
+                    resultElement.classList.add('animate-fade-in');
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.detail || 'Failed to encrypt'}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while encrypting');
+            }
+        });
+        
+        // Decrypt form handling
+        document.getElementById('decryptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const hashValue = document.getElementById('hashValue').value.trim();
+            const passphrase = document.getElementById('decryptPassphrase').value || null;
+            
+            if (!hashValue) {
+                alert('Please enter a hash value to decrypt');
+                return;
+            }
+            
+            try {
+                const url = `/decrypt/${hashValue}${passphrase ? `?passphrase=${encodeURIComponent(passphrase)}` : ''}`;
+                const response = await fetch(url);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('decryptedSecret').textContent = data.secret;
+                    
+                    const resultElement = document.getElementById('decryptResult');
+                    resultElement.classList.remove('hidden');
+                    resultElement.classList.add('animate-fade-in');
+                } else if (response.status === 401) {
+                    alert('This secret requires a passphrase for decryption');
+                } else if (response.status === 404) {
+                    alert('Secret not found. Check your hash value and try again');
+                } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.detail || 'Failed to decrypt'}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while decrypting');
+            }
+        });
+        
+        // Copy functionality
+        document.getElementById('copyHash').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('encryptedHash').textContent, 'Hash copied!');
+        });
+        
+        document.getElementById('copyDecryptUrl').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('decryptUrl').textContent, 'URL copied!');
+        });
+        
+        document.getElementById('copySecret').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('decryptedSecret').textContent, 'Secret copied!');
+        });
+        
+        function copyToClipboard(text, message) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed bottom-4 right-4 bg-dark py-2 px-4 rounded-lg shadow-lg animate-fade-in';
+                    notification.textContent = message;
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.style.opacity = '0';
+                        setTimeout(() => notification.remove(), 300);
+                    }, 2000);
+                })
+                .catch(err => console.error('Copy failed:', err));
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+site_name: topsecret
+repo_url: https://github.com/edvm/topsecret
+site_url: https://edvm.github.io/topsecret
+site_description: topsecret
+site_author: edvm 
+edit_uri: edit/main/docs/
+repo_name: edvm/topsecret
+copyright: Maintained by <a href="https://github.com/edvm/">edvm</a>.
+
+nav:
+  - Home: index.md
+  - Modules: modules.md
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ["topsecret"]
+theme:
+  name: material
+  feature:
+    tabs: true
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/edvm/topsecret
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/topsecret
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true

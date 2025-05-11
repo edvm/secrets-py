@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Update Title -->
+    <title>Secure Transmission // InGen Net</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Update Fonts - Using similar vibe fonts available on Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Update Tailwind Theme Configuration for Jurassic Park
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Jurassic Park inspired palette
+                        'jp-green': '#4B543B', // Deep Jungle Green
+                        'jp-green-light': '#7C8363', // Lighter Foliage Green
+                        'jp-brown': '#6F4F28', // Earthy Brown
+                        'jp-amber': '#FFBF00', // Amber/Warning Yellow
+                        'jp-red': '#A40000', // Danger Red
+                        'jp-metal': '#A9A9A9', // Dull Metal Gray
+                        'jp-metal-dark': '#696969', // Darker Metal/Screen Bezel
+                        'jp-screen': '#1A1A1A', // Dark Screen Background
+                        'jp-text': '#D0D0D0', // Off-white text for screens
+                        'jp-text-muted': '#888888', // Muted gray text
+                        'white': '#FFFFFF',
+                        'black': '#000000',
+                    },
+                    fontFamily: {
+                        'display': ['"Cinzel Decorative"', 'serif'], // Evokes JP Logo feel
+                        'sans': ['"Roboto Condensed"', 'sans-serif'], // Utilitarian Sans-Serif
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'subtle-flicker': 'subtleFlicker 3s infinite linear alternate',
+                        'warning-pulse': 'warningPulse 1.5s ease-in-out infinite',
+                        'scanlines': 'scanlines 8s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        subtleFlicker: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.95' },
+                        },
+                        warningPulse: {
+                            '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+                            '50%': { transform: 'scale(1.05)', opacity: '0.85' },
+                        },
+                        scanlines: {
+                            '0%': { backgroundPosition: '0 0' },
+                            '100%': { backgroundPosition: '0 100px' }, // Adjust size for desired speed/density
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Update Background Style */
+        .jp-bg {
+            background-color: #1a2015; /* Dark green base */
+            background-image:
+                linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+                url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cg fill="%233a402d" fill-opacity="0.1"%3E%3Cpath d="M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-41c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm62 62c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zM76 6c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-57 85c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm61-61c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zM6 39c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7z"/%3E%3C/g%3E%3C/svg%3E'); /* Subtle pattern */
+            position: relative;
+            overflow: hidden;
+        }
+        /* Optional: Scanlines effect */
+        .jp-bg::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0) 100%);
+            background-size: 100% 4px; /* Adjust line thickness */
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+            /* animation: scanlines 10s linear infinite; */ /* Uncomment for moving scanlines */
+        }
+
+        /* Update Card Style */
+        .jp-card {
+            background-color: rgba(40, 45, 35, 0.85); /* Darker semi-transparent green */
+            backdrop-filter: blur(5px);
+            border: 1px solid #7C8363; /* jp-green-light */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 8px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .jp-card:hover {
+            border-color: #FFBF00; /* jp-amber on hover */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Update Input Field Style */
+        .input-field {
+            background-color: rgba(26, 26, 26, 0.8); /* jp-screen */
+            border: 1px solid #696969; /* jp-metal-dark */
+            color: #D0D0D0; /* jp-text */
+            caret-color: #FFBF00; /* jp-amber */
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+        .input-field::placeholder {
+            color: #888888; /* jp-text-muted */
+            opacity: 0.7;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #FFBF00; /* jp-amber */
+            box-shadow: 0 0 8px rgba(255, 191, 0, 0.4);
+            background-color: rgba(26, 26, 26, 0.95);
+        }
+
+        /* Update Button Styles */
+        .btn {
+            transition: all 0.2s ease;
+            font-weight: 700; /* Roboto Condensed Bold */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+        }
+        .btn-primary { /* Encrypt Button */
+            background-color: #4B543B; /* jp-green */
+            color: #FFBF00; /* jp-amber */
+            border-color: #7C8363; /* jp-green-light */
+        }
+        .btn-primary:hover {
+            background-color: #7C8363; /* jp-green-light */
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(255, 191, 0, 0.3);
+            transform: translateY(-1px);
+        }
+        .btn-accent { /* Decrypt Button */
+            background-color: #6F4F28; /* jp-brown */
+            color: #FFBF00; /* jp-amber */
+            border-color: #a17b4f; /* Darker brown */
+        }
+        .btn-accent:hover {
+            background-color: #a17b4f;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(255, 191, 0, 0.3);
+            transform: translateY(-1px);
+        }
+        .btn-secondary { /* Copy Buttons */
+            background-color: rgba(105, 105, 105, 0.5); /* jp-metal-dark transparent */
+            color: #D0D0D0; /* jp-text */
+            border: 1px solid #A9A9A9; /* jp-metal */
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0.5px;
+        }
+        .btn-secondary:hover {
+            background-color: rgba(169, 169, 169, 0.7); /* jp-metal transparent */
+            border-color: #FFBF00; /* jp-amber */
+            color: #FFFFFF;
+        }
+        .btn-danger { /* For potential future use or emphasis */
+             background-color: #A40000; /* jp-red */
+             color: #FFFFFF;
+             border-color: #d43535;
+        }
+        .btn-danger:hover {
+            background-color: #d43535;
+            box-shadow: 0 2px 8px rgba(164, 0, 0, 0.5);
+        }
+
+
+        /* Update Result Box Style */
+        .result-box {
+            background-color: rgba(26, 26, 26, 0.9); /* jp-screen */
+            border: 1px solid #696969; /* jp-metal-dark */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* Update Hash/Data Display Style */
+        .hash-display {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px dashed #696969; /* jp-metal-dark */
+            color: #b0b0b0; /* Lighter than jp-text-muted */
+            font-family: 'Courier New', Courier, monospace; /* Monospace for data */
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+        .url-display {
+            color: #FFBF00; /* jp-amber */
+            font-weight: bold;
+        }
+
+        /* Ensure content is above pseudo-elements */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<!-- Update body classes -->
+<body class="jp-bg min-h-screen text-jp-text font-sans">
+    <div class="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
+        <header class="text-center mb-12 md:mb-16">
+            <!-- Update Heading -->
+            <h1 class="text-4xl md:text-6xl font-display mb-4 text-jp-amber animate-subtle-flicker">
+                InGen Secure Transmission
+            </h1>
+            <!-- Update Subtitle -->
+            <p class="text-lg text-jp-text-muted font-light tracking-wider uppercase">Handle With Extreme Caution</p>
+        </header>
+
+        <div class="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 lg:gap-12">
+            <!-- Encrypt Card: Update classes -->
+            <div class="jp-card rounded-lg p-6 md:p-8 opacity-0 w-full max-w-xl" id="encrypt-card">
+                <!-- Update heading and icon -->
+                <h2 class="text-2xl md:text-3xl font-display mb-6 flex items-center text-jp-amber">
+                    <!-- Warning Sign Icon -->
+                    <svg class="w-7 h-7 mr-3 text-jp-red animate-warning-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.008v.008H12v-.008Z" />
+                    </svg>
+                    Encrypt Payload
+                </h2>
+                <form id="encryptForm" class="space-y-5">
+                    <div class="space-y-2">
+                        <!-- Update labels -->
+                        <label class="block font-medium text-sm tracking-wide uppercase text-jp-text-muted">Secure Payload:</label>
+                        <textarea id="secret" rows="4" class="w-full input-field rounded-md p-3 transition resize-none text-sm" placeholder="Enter classified data..."></textarea>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block font-medium text-sm tracking-wide uppercase text-jp-text-muted">Access Code (Optional):</label>
+                        <input type="password" id="encryptPassphrase" class="w-full input-field rounded-md p-3 transition text-sm" placeholder="Enter security code">
+                    </div>
+                    <!-- Update button text and class -->
+                    <button type="submit" class="w-full btn btn-primary py-3 px-6 rounded-md">
+                        Generate Secure Link
+                    </button>
+                </form>
+
+                <!-- Update result section -->
+                <div id="encryptResult" class="mt-8 hidden p-5 result-box rounded-md">
+                    <h3 class="text-xl font-display mb-4 text-jp-amber flex items-center">
+                        <!-- Check Icon -->
+                        <svg class="w-5 h-5 mr-2 text-jp-green-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
+                        </svg>
+                        Transmission Link Generated
+                    </h3>
+                    <div class="space-y-4 font-sans text-sm">
+                        <div>
+                            <p class="text-xs text-jp-text-muted mb-1 uppercase tracking-wider">Containment Hash:</p>
+                            <p id="encryptedHash" class="hash-display p-3 rounded whitespace-pre-wrap break-words"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-jp-text-muted mb-1 uppercase tracking-wider">Access Link (Self-Destructs):</p>
+                            <p id="decryptUrl" class="hash-display p-3 rounded url-display whitespace-pre-wrap break-words"></p>
+                        </div>
+                        <div class="flex space-x-3 pt-2">
+                            <!-- Update button classes -->
+                            <button id="copyHash" class="btn btn-secondary py-2 px-4 rounded-md text-xs">
+                                Copy Hash
+                            </button>
+                            <button id="copyDecryptUrl" class="btn btn-secondary py-2 px-4 rounded-md text-xs">
+                                Copy Link
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decrypt Card: Update classes -->
+            <div class="jp-card rounded-lg p-6 md:p-8 opacity-0 w-full max-w-xl" id="decrypt-card">
+                <!-- Update heading and icon -->
+                <h2 class="text-2xl md:text-3xl font-display mb-6 flex items-center text-jp-amber">
+                     <!-- Footprint Icon -->
+                     <svg class="w-7 h-7 mr-3 text-jp-brown animate-subtle-flicker" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                       <path d="M11.335 3.002a1 1 0 0 1 1.33 0l1.75 2.1a1 1 0 0 0 .79.398h2.29a1 1 0 0 1 .99.86l.66 3.96a1 1 0 0 1-.304.913l-1.88 1.88a1 1 0 0 0-.293.707v2.18a1 1 0 0 1-.86.99l-3.96.66a1 1 0 0 1-.913-.304l-1.88-1.88a1 1 0 0 0-.707-.293h-2.18a1 1 0 0 1-.99-.86l-.66-3.96a1 1 0 0 1 .304-.913l1.88-1.88a1 1 0 0 0 .293-.707V4.5a1 1 0 0 1 .5-.866L11.335 3.002Z"/>
+                       <path d="M19.5 19.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+                       <path d="M15 21a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+                       <path d="M10.5 21a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+                     </svg>
+                    Access Data
+                </h2>
+                <form id="decryptForm" class="space-y-5">
+                    <div class="space-y-2">
+                        <label class="block font-medium text-sm tracking-wide uppercase text-jp-text-muted">Containment Hash:</label>
+                        <input type="text" id="hashValue" class="w-full input-field rounded-md p-3 transition text-sm" placeholder="Enter access hash from link">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block font-medium text-sm tracking-wide uppercase text-jp-text-muted">Access Code (If Required):</label>
+                        <input type="password" id="decryptPassphrase" class="w-full input-field rounded-md p-3 transition text-sm" placeholder="Enter security code if set">
+                    </div>
+                    <!-- Update button text and class -->
+                    <button type="submit" class="w-full btn btn-accent py-3 px-6 rounded-md">
+                        Retrieve Payload
+                    </button>
+                </form>
+
+                <!-- Update result section -->
+                <div id="decryptResult" class="mt-8 hidden result-box rounded-md p-5">
+                     <h3 class="text-xl font-display mb-4 text-jp-amber flex items-center">
+                        <!-- Unlocked Icon -->
+                        <svg class="w-5 h-5 mr-2 text-jp-green-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                        </svg>
+                        Payload Retrieved // Record Deleted
+                    </h3>
+                    <div class="space-y-4 font-sans text-sm">
+                        <div>
+                            <p class="text-xs text-jp-text-muted mb-1 uppercase tracking-wider">Classified Content:</p>
+                            <div class="hash-display p-4 rounded">
+                                <pre id="decryptedSecret" class="whitespace-pre-wrap break-words text-jp-text"></pre>
+                            </div>
+                        </div>
+                        <!-- Update button class -->
+                        <button id="copySecret" class="btn btn-secondary py-2 px-4 rounded-md text-xs">
+                            Copy Payload
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Footer -->
+        <footer class="mt-16 text-center text-jp-text-muted text-xs tracking-wide font-light opacity-70">
+            <p>InGen Secure Communications Network // Property of International Genetic Technologies</p>
+            <p class="mt-1">Transmissions self-destruct after single access attempt.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Animate cards on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hashFromUrl = urlParams.get('hash');
+            const encryptCard = document.getElementById('encrypt-card');
+            const decryptCard = document.getElementById('decrypt-card');
+            const cardContainer = encryptCard.parentElement; // Get the flex container
+
+            // Show decrypt card if hash is present, otherwise show encrypt card
+            if (hashFromUrl) {
+                encryptCard.classList.add('hidden');
+                decryptCard.classList.remove('hidden');
+                decryptCard.classList.add('opacity-100', 'animate-fade-in');
+                document.getElementById('hashValue').value = hashFromUrl;
+                document.getElementById('decryptPassphrase').focus();
+                cardContainer.classList.add('justify-center');
+            } else {
+                decryptCard.classList.add('hidden');
+                encryptCard.classList.remove('hidden');
+                encryptCard.classList.add('opacity-100', 'animate-fade-in');
+                cardContainer.classList.add('justify-center');
+            }
+        });
+
+        // Encrypt form handling
+        document.getElementById('encryptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const secret = document.getElementById('secret').value.trim();
+            const passphrase = document.getElementById('encryptPassphrase').value || null;
+
+            if (!secret) {
+                showNotification('ALERT: Payload data required for transmission.', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch('/encrypt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ secret, passphrase }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('encryptedHash').textContent = data.hash;
+                    document.getElementById('decryptUrl').textContent = data.decrypt_url;
+
+                    const resultElement = document.getElementById('encryptResult');
+                    const encryptForm = document.getElementById('encryptForm');
+                    encryptForm.classList.add('hidden');
+                    resultElement.classList.remove('hidden');
+                    resultElement.classList.add('animate-fade-in');
+                    showNotification('Transmission link generated successfully.', 'success');
+                } else {
+                    const error = await response.json();
+                    showNotification(`SYSTEM ERROR: ENCRYPTION FAILED [${response.status}] - ${error.detail || 'Unknown Malfunction'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Encryption Error:', error);
+                showNotification('CRITICAL ERROR: Encryption Service Offline.', 'error');
+            }
+        });
+
+        // Decrypt form handling
+        document.getElementById('decryptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const hashValue = document.getElementById('hashValue').value.trim();
+            const passphrase = document.getElementById('decryptPassphrase').value || null;
+
+            if (!hashValue) {
+                showNotification('ALERT: Containment hash required for access.', 'warning');
+                return;
+            }
+
+            try {
+                const url = `/decrypt/${hashValue}${passphrase ? `?passphrase=${encodeURIComponent(passphrase)}` : ''}`;
+                const response = await fetch(url);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('decryptedSecret').textContent = data.secret;
+
+                    const resultElement = document.getElementById('decryptResult');
+                    const decryptForm = document.getElementById('decryptForm');
+                    decryptForm.classList.add('hidden');
+                    resultElement.classList.remove('hidden');
+                    resultElement.classList.add('animate-fade-in');
+                    showNotification('Payload retrieved. Record auto-deleted.', 'success');
+                } else if (response.status === 401) {
+                     showNotification('ACCESS DENIED: Invalid or Missing Security Code.', 'error');
+                     document.getElementById('decryptPassphrase').focus();
+                } else if (response.status === 404) {
+                    showNotification('ACCESS DENIED: Payload not found or already retrieved/destroyed.', 'error');
+                } else {
+                    const error = await response.json();
+                    showNotification(`SYSTEM ERROR: DECRYPTION FAILED [${response.status}] - ${error.detail || 'Unknown Malfunction'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Decryption Error:', error);
+                showNotification('CRITICAL ERROR: Decryption Service Offline.', 'error');
+            }
+        });
+
+        // Copy functionality
+        document.getElementById('copyHash').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('encryptedHash').textContent, 'Hash Copied');
+        });
+
+        document.getElementById('copyDecryptUrl').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('decryptUrl').textContent, 'Link Copied');
+        });
+
+        document.getElementById('copySecret').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('decryptedSecret').textContent, 'Payload Copied');
+        });
+
+        function copyToClipboard(text, message) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showNotification(message, 'info'))
+                    .catch(err => {
+                        console.error('Async Copy failed:', err);
+                        showNotification('COPY FAILED: Clipboard access denied.', 'warning');
+                    });
+            } else {
+                // Fallback
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed"; textArea.style.top = "-9999px"; textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus(); textArea.select();
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showNotification(message, 'info');
+                    } else {
+                        console.error('Fallback Copy failed: execCommand returned false');
+                        showNotification('COPY FAILED: Unable to copy (Fallback).', 'warning');
+                    }
+                } catch (err) {
+                    console.error('Fallback Copy failed:', err);
+                    showNotification('COPY FAILED: Error during fallback.', 'warning');
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // Updated Notification Function with JP theme colors
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            let bgColor, textColor, borderColor, icon;
+
+            // Define styles based on type (success, warning, error, info)
+            switch (type) {
+                case 'success': // Greenish, stable
+                    bgColor = 'bg-jp-green/90'; textColor = 'text-jp-text'; borderColor = 'border-jp-green-light';
+                    icon = `<svg class="w-4 h-4 mr-2 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" /></svg>`;
+                    break;
+                case 'warning': // Amber/Yellow
+                    bgColor = 'bg-jp-amber/90'; textColor = 'text-jp-screen'; borderColor = 'border-yellow-600';
+                    icon = `<svg class="w-4 h-4 mr-2 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.008v.008H12v-.008Z" /></svg>`;
+                    break;
+                case 'error': // Red
+                    bgColor = 'bg-jp-red/90'; textColor = 'text-white'; borderColor = 'border-red-700';
+                    icon = `<svg class="w-4 h-4 mr-2 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" /></svg>`;
+                    break;
+                default: // info (Metal/Gray)
+                    bgColor = 'bg-jp-metal-dark/90'; textColor = 'text-jp-text'; borderColor = 'border-jp-metal';
+                    icon = `<svg class="w-4 h-4 mr-2 inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A.75.75 0 0 0 10.5 14h.002a.75.75 0 0 0 .748-.684l.459-2.066A.25.25 0 0 1 11.747 11H12a.75.75 0 0 0 0-1.5H9Z" clip-rule="evenodd" /></svg>`;
+                    break;
+            }
+
+            // Adjusted classes for JP theme
+            notification.className = `fixed bottom-4 right-4 ${bgColor} ${textColor} py-2 px-4 rounded-md shadow-lg border ${borderColor} text-xs font-sans tracking-wide animate-fade-in z-50 backdrop-blur-sm max-w-xs`;
+            notification.innerHTML = `${icon} ${message}`; // Use innerHTML to include the icon SVG
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)'; // Slide out
+                setTimeout(() => notification.remove(), 500);
+            }, 4000); // Increased duration slightly
+        }
+
+    </script>
+</body>
+</html>

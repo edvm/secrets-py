@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Update Title -->
+    <title>Ephemeral Message // Sakura Crypt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Update Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Update Tailwind Theme Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Sakura-inspired palette
+                        primary: '#FFB7C5', // Soft Pink (Sakura Blossom)
+                        'primary-dark': '#E6A8B4', // Darker Pink
+                        secondary: '#A0D2DB', // Light Aqua/Sky Blue
+                        'secondary-dark': '#8EBFCA', // Darker Aqua
+                        accent: '#D8BFD8', // Light Lavender/Thistle
+                        'accent-dark': '#C4ACC4', // Darker Lavender
+                        light: '#F8F8F8', // Very Light Gray/Off-White
+                        dark: '#4A4A4A', // Dark Gray (for text)
+                        'dark-muted': '#6B6B6B', // Medium Gray
+                        white: '#FFFFFF',
+                    },
+                    fontFamily: {
+                        'display': ['"Playfair Display"', 'serif'], // Elegant Serif
+                        'sans': ['"Noto Sans JP"', 'sans-serif'], // Clean Sans-Serif
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'subtle-pulse': 'subtlePulse 2.5s ease-in-out infinite',
+                        // Remove old animations like flicker, scanlines, glitch, pulseWarning
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        subtlePulse: {
+                            '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+                            '50%': { opacity: '0.9', transform: 'scale(1.02)' },
+                        },
+                        // Remove old keyframes
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Update Background Style */
+        .sakura-bg {
+            background: linear-gradient(135deg, #F8F8F8 0%, #fdf2f4 50%, #f0f8ff 100%); /* Light gradient */
+            position: relative;
+            overflow: hidden;
+        }
+        /* Optional: Subtle pattern or texture instead of noise/scanlines */
+        .sakura-bg::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            /* Example: Very subtle texture - replace with SVG or keep simple */
+            /* background-image: url('data:image/svg+xml;...'); */
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Update Card Style */
+        .sakura-card {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 183, 197, 0.4); /* primary light border */
+            box-shadow: 0 6px 25px rgba(74, 74, 74, 0.1); /* Soft shadow */
+            transition: all 0.3s ease;
+        }
+        .sakura-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(74, 74, 74, 0.15);
+        }
+
+        /* Update Input Field Style */
+        .input-field {
+            background-color: rgba(248, 248, 248, 0.7); /* light */
+            border: 1px solid rgba(160, 210, 219, 0.5); /* secondary */
+            color: #4A4A4A; /* dark */
+            caret-color: #FFB7C5; /* primary */
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: rgba(255, 183, 197, 0.8); /* primary */
+            box-shadow: 0 0 8px rgba(255, 183, 197, 0.3);
+        }
+
+        /* Update Button Styles */
+        .btn {
+            transition: all 0.2s ease;
+            font-weight: 400; /* Noto Sans JP regular */
+            letter-spacing: 0.5px;
+        }
+        .btn-primary {
+            background-color: #FFB7C5; /* primary */
+            color: #4A4A4A; /* dark */
+            border: 1px solid rgba(230, 168, 180, 0.5);
+        }
+        .btn-primary:hover {
+            background-color: #E6A8B4; /* primary-dark */
+            box-shadow: 0 4px 10px rgba(255, 183, 197, 0.4);
+            transform: translateY(-1px);
+        }
+        .btn-accent { /* Using secondary color for decrypt button */
+            background-color: #A0D2DB; /* secondary */
+            color: #4A4A4A; /* dark */
+            border: 1px solid rgba(142, 191, 202, 0.5);
+        }
+        .btn-accent:hover {
+            background-color: #8EBFCA; /* secondary-dark */
+            box-shadow: 0 4px 10px rgba(160, 210, 219, 0.4);
+            transform: translateY(-1px);
+        }
+        .btn-secondary { /* Using accent color for copy buttons */
+            background-color: rgba(216, 191, 216, 0.3); /* accent transparent */
+            color: #4A4A4A; /* dark */
+            border: 1px solid rgba(216, 191, 216, 0.6);
+        }
+        .btn-secondary:hover {
+            background-color: rgba(216, 191, 216, 0.5);
+            border-color: rgba(216, 191, 216, 0.9);
+        }
+
+        /* Remove Classified Title Style */
+        /* .classified-title { ... } */
+        /* .classified-title::before { ... } */
+
+        /* Update Result Box Style */
+        .result-box {
+            background-color: rgba(248, 248, 248, 0.8); /* light */
+            border: 1px solid rgba(160, 210, 219, 0.6); /* secondary */
+        }
+
+        /* Update Hash/Data Display Style */
+        .hash-display {
+            background-color: rgba(255, 255, 255, 0.9); /* white */
+            border: 1px dashed rgba(216, 191, 216, 0.5); /* accent */
+            color: #6B6B6B; /* dark-muted */
+        }
+        .url-display {
+            color: #8EBFCA; /* secondary-dark */
+        }
+
+        /* Ensure content is above pseudo-elements */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<!-- Update body classes -->
+<body class="sakura-bg min-h-screen text-dark font-sans">
+    <div class="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
+        <header class="text-center mb-12 md:mb-16">
+            <!-- Update Heading -->
+            <h1 class="text-4xl md:text-6xl font-display mb-4 text-primary-dark">
+                Ephemeral Message
+            </h1>
+            <!-- Update Subtitle -->
+            <p class="text-lg text-dark-muted font-light">Share secrets that gently fade away.</p>
+        </header>
+
+        <div class="flex flex-col lg:flex-row justify-center items-center lg:items-start gap-8 lg:gap-12">
+            <!-- Encrypt Card: Update classes -->
+            <div class="sakura-card rounded-lg p-6 md:p-8 opacity-0 w-full max-w-xl" id="encrypt-card">
+                <!-- Update heading and icon -->
+                <h2 class="text-2xl md:text-3xl font-display mb-6 flex items-center text-primary-dark">
+                    <svg class="w-7 h-7 mr-3 text-primary animate-subtle-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5c0-.621.504-1.125 1.125-1.125H6.75m10.5 6.75v-1.875a3.375 3.375 0 0 1 3.375-3.375h1.5c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125h-1.5m-10.5-6.75a3.375 3.375 0 0 0-3.375-3.375H6.75a3.375 3.375 0 0 0-3.375 3.375m10.5 0a3.375 3.375 0 0 1 3.375-3.375h1.5a3.375 3.375 0 0 1 3.375 3.375m0 0c0 1.864-1.511 3.375-3.375 3.375M12 12.75h.008v.008H12v-.008Z" />
+                    </svg>
+                    Create Message
+                </h2>
+                <form id="encryptForm" class="space-y-5">
+                    <div class="space-y-2">
+                        <!-- Update labels -->
+                        <label class="block font-medium text-sm tracking-wide opacity-80 text-dark-muted">Your Secret Message:</label>
+                        <textarea id="secret" rows="4" class="w-full input-field rounded-md p-3 transition resize-none text-sm" placeholder="Enter the message you want to protect..."></textarea>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block font-medium text-sm tracking-wide opacity-80 text-dark-muted">Password (Optional):</label>
+                        <input type="password" id="encryptPassphrase" class="w-full input-field rounded-md p-3 transition text-sm" placeholder="Add a password for extra security">
+                    </div>
+                    <!-- Update button text and class -->
+                    <button type="submit" class="w-full btn btn-primary py-3 px-6 rounded-md">
+                        Create Ephemeral Link
+                    </button>
+                </form>
+
+                <!-- Update result section -->
+                <div id="encryptResult" class="mt-8 hidden p-5">
+                    <h3 class="text-xl font-display mb-4 text-primary-dark flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" />
+                        </svg>
+                        Message Link Created
+                    </h3>
+                    <div class="space-y-4 font-sans text-sm">
+                        <div>
+                            <p class="text-xs text-dark-muted mb-1 uppercase tracking-wider">Message Hash:</p>
+                            <p id="encryptedHash" class="hash-display p-3 rounded whitespace-pre-wrap break-words"></p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-dark-muted mb-1 uppercase tracking-wider">Shareable Link:</p>
+                            <p id="decryptUrl" class="hash-display p-3 rounded url-display whitespace-pre-wrap break-words"></p>
+                        </div>
+                        <div class="flex space-x-3 pt-2">
+                            <!-- Update button classes -->
+                            <button id="copyHash" class="btn btn-secondary py-2 px-4 rounded-md text-xs">
+                                Copy Hash
+                            </button>
+                            <button id="copyDecryptUrl" class="btn btn-secondary py-2 px-4 rounded-md text-xs">
+                                Copy Link
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decrypt Card: Update classes -->
+            <div class="sakura-card rounded-lg p-6 md:p-8 opacity-0 w-full max-w-xl" id="decrypt-card">
+                <!-- Update heading and icon -->
+                <h2 class="text-2xl md:text-3xl font-display mb-6 flex items-center text-secondary-dark">
+                     <svg class="w-7 h-7 mr-3 text-secondary animate-subtle-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                       <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                     </svg>
+                    View Message
+                </h2>
+                <form id="decryptForm" class="space-y-5">
+                    <div class="space-y-2">
+                        <label class="block font-medium text-sm tracking-wide opacity-80 text-dark-muted">Message Hash:</label>
+                        <input type="text" id="hashValue" class="w-full input-field rounded-md p-3 transition text-sm" placeholder="Enter the message hash from the link">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block font-medium text-sm tracking-wide opacity-80 text-dark-muted">Password (If Required):</label>
+                        <input type="password" id="decryptPassphrase" class="w-full input-field rounded-md p-3 transition text-sm" placeholder="Enter password if one was set">
+                    </div>
+                    <!-- Update button text and class -->
+                    <button type="submit" class="w-full btn btn-accent py-3 px-6 rounded-md">
+                        Reveal Message
+                    </button>
+                </form>
+
+                <!-- Update result section -->
+                <div id="decryptResult" class="mt-8 hidden result-box rounded-md p-5">
+                     <h3 class="text-xl font-display mb-4 text-secondary-dark flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-secondary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 0-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 0 0 .75-.75v-4a.75.75 0 0 1 1.5 0v4A2.25 2.25 0 0 1 12.75 17h-8.5A2.25 2.25 0 0 1 2 14.75v-8.5A2.25 2.25 0 0 1 4.25 4h5a.75.75 0 0 1 0 1.5h-5Z" clip-rule="evenodd" />
+                          <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 0 0 1.06.053L16.5 4.44v2.81a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.553l-9.056 8.19a.75.75 0 0 0-.053 1.06Z" clip-rule="evenodd" />
+                        </svg>
+                        Message Revealed
+                    </h3>
+                    <div class="space-y-4 font-sans text-sm">
+                        <div>
+                            <p class="text-xs text-dark-muted mb-1 uppercase tracking-wider">Secret Content:</p>
+                            <div class="hash-display p-4 rounded">
+                                <pre id="decryptedSecret" class="whitespace-pre-wrap break-words"></pre>
+                            </div>
+                        </div>
+                        <!-- Update button class -->
+                        <button id="copySecret" class="btn btn-secondary py-2 px-4 rounded-md text-xs">
+                            Copy Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Footer -->
+        <footer class="mt-16 text-center text-dark-muted text-xs tracking-wide font-light">
+            <p>Sakura Crypt // Ephemeral Messaging Service</p>
+            <p class="mt-1">Messages are deleted after being viewed once.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Animate cards on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hashFromUrl = urlParams.get('hash');
+            const encryptCard = document.getElementById('encrypt-card');
+            const decryptCard = document.getElementById('decrypt-card');
+            const cardContainer = encryptCard.parentElement; // Get the flex container
+
+            // Always show decrypt card if hash is present, otherwise show encrypt card
+            if (hashFromUrl) {
+                encryptCard.classList.add('hidden'); // Hide encrypt card
+                decryptCard.classList.remove('hidden'); // Ensure decrypt card is visible
+                decryptCard.classList.add('opacity-100', 'animate-fade-in');
+                document.getElementById('hashValue').value = hashFromUrl;
+                document.getElementById('decryptPassphrase').focus();
+                cardContainer.classList.add('justify-center'); // Center the single card
+            } else {
+                decryptCard.classList.add('hidden'); // Hide decrypt card
+                encryptCard.classList.remove('hidden'); // Ensure encrypt card is visible
+                encryptCard.classList.add('opacity-100', 'animate-fade-in');
+                // Optional: Decide if you want to show both initially or just encrypt
+                // To show both, remove the decryptCard.classList.add('hidden') line above
+                // and add animation to decryptCard as well.
+                // For now, only showing encrypt card by default.
+                cardContainer.classList.add('justify-center'); // Center the single card
+            }
+        });
+
+        // Encrypt form handling
+        document.getElementById('encryptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const secret = document.getElementById('secret').value.trim();
+            const passphrase = document.getElementById('encryptPassphrase').value || null;
+
+            if (!secret) {
+                // Use updated notification colors
+                showNotification('Please enter a message to encrypt.', 'accent');
+                return;
+            }
+
+            try {
+                const response = await fetch('/encrypt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ secret, passphrase }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('encryptedHash').textContent = data.hash;
+                    document.getElementById('decryptUrl').textContent = data.decrypt_url;
+
+                    const resultElement = document.getElementById('encryptResult');
+                    const encryptForm = document.getElementById('encryptForm');
+                    encryptForm.classList.add('hidden'); // Hide the form
+                    resultElement.classList.remove('hidden');
+                    resultElement.classList.add('animate-fade-in');
+                    // Use updated notification colors
+                    showNotification('Ephemeral link created successfully.', 'primary');
+                } else {
+                    const error = await response.json();
+                    // Use updated notification colors
+                    showNotification(`ENCRYPTION FAILED: ${error.detail || 'Unknown Error'}`, 'accent');
+                }
+            } catch (error) {
+                console.error('Encryption Error:', error);
+                // Use updated notification colors
+                showNotification('SYSTEM ERROR: Encryption Service Unavailable.', 'accent');
+            }
+        });
+
+        // Decrypt form handling
+        document.getElementById('decryptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const hashValue = document.getElementById('hashValue').value.trim();
+            const passphrase = document.getElementById('decryptPassphrase').value || null;
+
+            if (!hashValue) {
+                // Use updated notification colors
+                showNotification('Please enter the message hash.', 'accent');
+                return;
+            }
+
+            try {
+                const url = `/decrypt/${hashValue}${passphrase ? `?passphrase=${encodeURIComponent(passphrase)}` : ''}`;
+                const response = await fetch(url);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('decryptedSecret').textContent = data.secret;
+
+                    const resultElement = document.getElementById('decryptResult');
+                    const decryptForm = document.getElementById('decryptForm');
+                    decryptForm.classList.add('hidden'); // Hide the form after successful decryption
+                    resultElement.classList.remove('hidden');
+                    resultElement.classList.add('animate-fade-in');
+                    // Use updated notification colors
+                    showNotification('Message revealed. It has now been deleted.', 'primary');
+                } else if (response.status === 401) {
+                     // Use updated notification colors
+                     showNotification('DECRYPTION FAILED: Invalid or Missing Password.', 'accent');
+                     document.getElementById('decryptPassphrase').focus();
+                } else if (response.status === 404) {
+                    // Use updated notification colors
+                    showNotification('DECRYPTION FAILED: Message not found or already viewed.', 'accent');
+                } else {
+                    const error = await response.json();
+                    // Use updated notification colors
+                    showNotification(`DECRYPTION FAILED: ${error.detail || 'Unknown Error'}`, 'accent');
+                }
+            } catch (error) {
+                console.error('Decryption Error:', error);
+                // Use updated notification colors
+                showNotification('SYSTEM ERROR: Decryption Service Unavailable.', 'accent');
+            }
+        });
+
+        // Copy functionality
+        document.getElementById('copyHash').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('encryptedHash').textContent, 'Hash Copied');
+        });
+
+        document.getElementById('copyDecryptUrl').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('decryptUrl').textContent, 'Link Copied');
+        });
+
+        document.getElementById('copySecret').addEventListener('click', () => {
+            copyToClipboard(document.getElementById('decryptedSecret').textContent, 'Message Copied');
+        });
+
+        function copyToClipboard(text, message) {
+            // Check if navigator.clipboard is available and context is secure
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showNotification(message, 'secondary'))
+                    .catch(err => {
+                        console.error('Async Copy failed:', err);
+                        showNotification('COPY FAILED: Could not access clipboard.', 'accent');
+                    });
+            } else {
+                // Fallback using document.execCommand
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                // Make the textarea invisible
+                textArea.style.position = "fixed";
+                textArea.style.top = "-9999px";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showNotification(message, 'secondary');
+                    } else {
+                        console.error('Fallback Copy failed: execCommand returned false');
+                        showNotification('COPY FAILED: Unable to copy using fallback.', 'accent');
+                    }
+                } catch (err) {
+                    console.error('Fallback Copy failed:', err);
+                    showNotification('COPY FAILED: Error during fallback copy.', 'accent');
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        // Updated Notification Function with new theme colors
+        function showNotification(message, type = 'secondary') {
+            const notification = document.createElement('div');
+            let bgColor, textColor, borderColor;
+
+            switch (type) {
+                case 'primary': // Soft Pink
+                    bgColor = 'bg-primary/90'; textColor = 'text-dark'; borderColor = 'border-primary-dark'; break;
+                case 'accent': // Light Lavender (Used for errors/warnings)
+                    bgColor = 'bg-accent/90'; textColor = 'text-dark'; borderColor = 'border-accent-dark'; break;
+                default: // secondary (Light Aqua)
+                    bgColor = 'bg-secondary/90'; textColor = 'text-dark'; borderColor = 'border-secondary-dark'; break;
+            }
+
+            // Adjusted classes for new theme
+            notification.className = `fixed bottom-4 right-4 ${bgColor} ${textColor} py-2 px-4 rounded-md shadow-lg border ${borderColor} text-xs font-sans tracking-wide animate-fade-in z-50 backdrop-blur-sm`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.transition = 'opacity 0.3s ease-out';
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+    </script>
+</body>
+</html>
