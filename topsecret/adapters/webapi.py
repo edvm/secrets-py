@@ -81,15 +81,15 @@ async def encrypt_secret(request: EncryptRequest, base_url: str = Depends(get_ba
         ) from e
 
     _, hash_value = app.encryption_service.encrypt(data, request.passphrase)
-    decrypt_url = f"{base_url}/decrypt/{hash_value}"
+    decrypt_url = f"{base_url}?hash={hash_value}"
     return EncryptResponse(hash=hash_value, decrypt_url=decrypt_url)
 
 
-@api.get("/decrypt/{hash_value}", response_model=DecryptResponse, tags=["decryption"])
-async def decrypt_secret(hash_value: str, passphrase: str | None = None) -> DecryptResponse:
+@api.post("/decrypt/{hash_value}", response_model=DecryptResponse, tags=["decryption"])
+async def decrypt_secret(hash_value: str, request: DecryptRequest) -> DecryptResponse:
     """Decrypt a secret."""
     try:
-        decrypted_text = app.encryption_service.decrypt(hash_value, passphrase)
+        decrypted_text = app.encryption_service.decrypt(hash_value, request.passphrase)
         return DecryptResponse(secret=decrypted_text)
     except DecryptionError as e:
         raise HTTPException(status_code=401, detail=str(e)) from e
