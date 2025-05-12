@@ -1,3 +1,20 @@
+# TopSecret is a simple secret management tool that allows users to encrypt and
+# decrypt secrets using a passphrase.
+# Copyright (C) <2025>  <Emiliano Dalla Verde Marcozzi>
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 import os
 from unittest.mock import mock_open, patch
 
@@ -31,7 +48,7 @@ def test_encrypt_without_passphrase(client):
     data = response.json()
     assert "hash" in data
     assert "decrypt_url" in data
-    assert data["decrypt_url"].endswith(f"/decrypt/{data['hash']}")
+    assert data["decrypt_url"].endswith(f"{data['hash']}")
 
 
 def test_encrypt_with_passphrase(client):
@@ -54,7 +71,7 @@ def test_decrypt_without_passphrase(client):
     encrypt_response = client.post("/encrypt", json={"secret": "my test secret"})
     hash_value = encrypt_response.json()["hash"]
 
-    decrypt_response = client.get(f"/decrypt/{hash_value}")
+    decrypt_response = client.post(f"/decrypt/{hash_value}", data=None)
     assert decrypt_response.status_code == 200
     assert decrypt_response.json()["secret"] == "my test secret"  # noqa: S105
 
@@ -64,7 +81,7 @@ def test_decrypt_with_passphrase(client):
     encrypt_response = client.post("/encrypt", json={"secret": "protected secret", "passphrase": "mypass"})
     hash_value = encrypt_response.json()["hash"]
 
-    decrypt_response = client.get(f"/decrypt/{hash_value}?passphrase=mypass")
+    decrypt_response = client.post(f"/decrypt/{hash_value}", json={"passphrase": "mypass"})
     assert decrypt_response.status_code == 200
     assert decrypt_response.json()["secret"] == "protected secret"  # noqa: S105
 
@@ -75,7 +92,7 @@ def test_decrypt_with_wrong_passphrase(client):
     encrypt_response = client.post("/encrypt", json={"secret": "protected secret", "passphrase": "correct"})
     hash_value = encrypt_response.json()["hash"]
 
-    decrypt_response = client.get(f"/decrypt/{hash_value}?passphrase=wrong")
+    decrypt_response = client.post(f"/decrypt/{hash_value}", json={"passphrase": "wrong"})
     assert decrypt_response.status_code == 401
     assert "Invalid passphrase" in decrypt_response.json()["detail"]
 
@@ -85,14 +102,14 @@ def test_decrypt_missing_passphrase(client):
     encrypt_response = client.post("/encrypt", json={"secret": "need passphrase", "passphrase": "required"})
     hash_value = encrypt_response.json()["hash"]
 
-    decrypt_response = client.get(f"/decrypt/{hash_value}")
+    decrypt_response = client.post(f"/decrypt/{hash_value}", json={})
     assert decrypt_response.status_code == 401
     assert "Passphrase required for decryption" in decrypt_response.json()["detail"]
 
 
 def test_decrypt_nonexistent_hash(client):
     """Test decrypting a hash that doesn't exist."""
-    response = client.get("/decrypt/nonexistenthash12345")
+    response = client.post("/decrypt/nonexistenthash12345", json={})
     assert response.status_code == 401
     assert "Ciphertext not found in storage." in response.json()["detail"]
 

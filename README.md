@@ -1,5 +1,7 @@
 # TopSecret
 
+![TopSecret](static/screenshots/default.png)
+
 TopSecret is an encryption and decryption service with a REST API.
 
 It provides two primary methods of encryption:
@@ -8,6 +10,11 @@ It provides two primary methods of encryption:
 2. **Passphrase encryption**: Uses a user-provided passphrase for more secure encryption
 
 The project includes a FastAPI web service that expose encryption functionality through HTTP endpoints, allowing users to encrypt sensitive information and share decryption URLs.
+
+
+## Documentation
+
+Project documentation is available at [https://edvm.github.io/secrets-py/](https://edvm.github.io/secrets-py/).
 
 ## Sponsorship
 
@@ -21,7 +28,7 @@ If you find this project useful, consider supporting its development:
 
 ### Prerequisites
 
-- Python 3.10 or higher and `make` installed.
+0- Python 3.10 or higher and `make` installed.
 
 1- Install `uv` (Linux and MacOS)
 ```bash
@@ -44,12 +51,12 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/edvm/secrets-py.git
-cd secrets-py 
+cd secrets-py
 ```
 
 ### Using the Makefile
 
-The project includes a Makefile trying to make your life easier. You can use it to automate common tasks. 
+The project includes a Makefile trying to make your life easier. You can use it to automate common tasks.
 
 Be sure to have `make` and `uv` installed.
 
@@ -80,11 +87,14 @@ make run
 
 The API will be available at http://localhost:8000.
 
-## Testing the API
+### Running with Docker Compose
+If you prefer to run the API using Docker Compose, you can use the provided `compose.yml` file.
+1. Build and run the Docker container:
 
-### Using the API Documentation
-
-Visit http://localhost:8000/docs for an interactive Swagger UI to test the API endpoints.
+```bash
+docker compose up --build
+```
+2. Access the API at http://localhost:8000.
 
 ### Using curl
 
@@ -104,25 +114,19 @@ curl -X POST http://localhost:8000/encrypt \
 #### Testing the decrypt endpoint
 ```sh
 # Example 3: Decrypt a secret (replace HASH_VALUE with the actual hash from the encrypt response)
-curl -X GET http://localhost:8000/decrypt/HASH_VALUE
+curl -X POST http://localhost:8000/decrypt/HASH_VALUE
 
 # Example 4: Decrypt a passphrase-protected secret
-curl -X GET "http://localhost:8000/decrypt/HASH_VALUE?passphrase=mysecretpassword123"
-```
-
-#### Example workflow
-
-```sh
-# Step 1: Encrypt a secret and capture the hash
-RESPONSE=$(curl -s -X POST http://localhost:8000/encrypt \
+curl -X POST http://localhost:8000/decrypt/HASH_VALUE \
   -H "Content-Type: application/json" \
-  -d '{"secret": "My super secret info"}'
-)
-
-# Step 2: Extract the hash from the response (requires jq)
-HASH=$(echo $RESPONSE | jq -r '.hash')
-echo "Hash: $HASH"
-
-# Step 3: Decrypt using the hash
-curl -X GET http://localhost:8000/decrypt/$HASH
+  -d '{"passphrase": "mysecretpassword123"}'
 ```
+
+### Skins / Themes
+
+You can create your own skins by modifying the HTML and CSS files in the `static/themes` directory. Use `default.html` as base template and create your own theme by copying it to a new file, e.g., `mytheme.html`. Then, you can specify the theme by query parameter in the URL, e.g., `http://localhost:8000/encrypt?theme=mytheme` or override `default.html` with your
+custom skin. 
+
+Here are some screenshots of built-in themes:
+
+![Sakura](static/screenshots/sakura.png)

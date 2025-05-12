@@ -357,7 +357,9 @@
 
                     const resultElement = document.getElementById('encryptResult');
                     const encryptForm = document.getElementById('encryptForm');
+                    const decryptForm = document.getElementById('decryptForm');
                     encryptForm.classList.add('hidden'); // Hide the form
+                    decryptForm.style.display = 'none'; // Hide the decrypt form
                     resultElement.classList.remove('hidden');
                     resultElement.classList.add('animate-fade-in');
                     showNotification('Encryption Confirmed. Hash Generated.', 'primary');
@@ -383,8 +385,12 @@
             }
 
             try {
-                const url = `/decrypt/${hashValue}${passphrase ? `?passphrase=${encodeURIComponent(passphrase)}` : ''}`;
-                const response = await fetch(url);
+                const url = `/decrypt/${hashValue}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ passphrase: passphrase })
+                });
 
                 if (response.ok) {
                     const data = await response.json();
@@ -451,12 +457,6 @@
                 }
                 document.body.removeChild(textArea);
             }
-            // navigator.clipboard.writeText(text)
-            //     .then(() => showNotification(message, 'secondary'))
-            //     .catch(err => {
-            //         console.error('Copy failed:', err);
-            //         showNotification('COPY FAILED: Unable to access clipboard.', 'accent');
-            //     });
         }
 
         // Updated Notification Function
