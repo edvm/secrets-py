@@ -30,12 +30,12 @@ clean-build: ## Clean build artifacts
 	@echo "🚀 Removing build artifacts"
 	@uv run python -c "import shutil; import os; shutil.rmtree('dist') if os.path.exists('dist') else None"
 
-.PHONY: docs-test
-docs-test: ## Test if documentation can be built without warnings or errors
+.PHONY: docs-build
+docs-build: ## Test if documentation can be built without warnings or errors
 	@uv run mkdocs build -s
 
-.PHONY: docs
-docs: ## Build and serve the documentation
+.PHONY: see-docs
+see-docs: ## Build and serve the documentation
 	@uv run mkdocs serve
 
 .PHONY: help
