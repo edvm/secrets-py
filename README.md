@@ -124,6 +124,6 @@ custom skin.
 
 Here are some screenshots of built-in themes:
 
-![Default](static/screenshots/default.png)
-![Sakura](static/screenshots/sakura.png)
+![TopSecret](static/screenshots/default.png)
 
+![Sakura](static/screenshots/sakura.png)
