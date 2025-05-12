@@ -1,5 +1,4 @@
-site_name: TopSecret Documentation
-repo_url: https://github.com/edvm/topsecret
+site_name: Top secret documentation
 repo_url: https://github.com/edvm/secrets-py.git
 site_url: https://github.com/edvm/secrets-py.git
 site_description: topsecret
@@ -10,7 +9,14 @@ copyright: Maintained by <a href="https://github.com/edvm/">edvm</a>.
 
 nav:
   - Home: index.md
-  - API Modules: modules.md
+  - Encryption:
+    - AES cipher: infra/cipher/aes.md
+    - Encryption service: services/encryption.md 
+  - Storage:
+    - In memory (for dev): infra/storage/inmem.md
+  - Delivery:
+    - Rest API: adapters/webapi.md
+
 docs_dir: docs
 plugins:
   - search

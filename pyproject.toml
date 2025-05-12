@@ -40,6 +40,8 @@ dev = [
     "mkdocstrings[python]>=0.26.1",
     "httpx>=0.28.1",
     "pytest-mock>=3.14.0",
+    "mkdocstrings-python>=1.16.7",
+    "pymdown-extensions>=10.14.3",
 ]
 
 [build-system]

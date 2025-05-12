@@ -17,7 +17,7 @@ static_dir = os.path.join(parent_dir, "static")
 
 api.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-# TODO: move this to config 
+# TODO: move this to config
 MAX_SECRET_LENGTH = 4096
 
 
@@ -72,7 +72,26 @@ def get_theme_path(name: str) -> str:
 
 @api.post("/encrypt", response_model=EncryptResponse, tags=["encryption"])
 async def encrypt_secret(request: EncryptRequest, base_url: str = Depends(get_base_url)) -> EncryptResponse:
-    """Encrypt a secret."""
+    """Encrypts a secret provided in the request.
+
+    This endpoint takes a secret string and a passphrase, encrypts the secret,
+    and returns a hash representing the encrypted data along with a URL
+    that can be used to decrypt it.
+
+    Args:
+        request: An `EncryptRequest` object containing the secret to be encrypted
+            and the passphrase to use for encryption.
+        base_url: The base URL of the application, injected as a dependency.
+            Used to construct the decryption URL.
+
+    Returns:
+        An `EncryptResponse` object containing the hash of the encrypted secret
+        and the full URL for decryption.
+
+    Raises:
+        HTTPException: If the `request.secret` cannot be UTF-8 encoded,
+            a 400 Bad Request error is raised.
+    """
     try:
         data = request.secret.encode("utf-8")
     except UnicodeEncodeError as e:
@@ -87,9 +106,24 @@ async def encrypt_secret(request: EncryptRequest, base_url: str = Depends(get_ba
 
 @api.post("/decrypt/{hash_value}", response_model=DecryptResponse, tags=["decryption"])
 async def decrypt_secret(hash_value: str, request: DecryptRequest = Body(default=None)) -> DecryptResponse:
-    """Decrypt a secret."""
+    """Decrypt a secret given its hash value.
+
+    This endpoint attempts to decrypt a secret identified by its hash.
+    An optional passphrase can be provided in the request body.
+    Args:
+        hash_value: The hash identifier of the secret to be decrypted.
+        request: An optional request body containing the passphrase.
+                If not provided or if `passphrase` is None, decryption
+                will be attempted without a passphrase.
+    Returns:
+        A DecryptResponse object containing the decrypted secret text.
+    Raises:
+        HTTPException: If decryption fails (e.g., due to an incorrect
+                    passphrase or invalid hash), an HTTP 401 Unauthorized
+                    error is raised with details of the decryption error.
+    """
     passphrase = None if request is None else request.passphrase
-    
+
     try:
         decrypted_text = app.encryption_service.decrypt(hash_value, passphrase)
         return DecryptResponse(secret=decrypted_text)
