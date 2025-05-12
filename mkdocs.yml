@@ -16,6 +16,8 @@ nav:
     - In memory (for dev): infra/storage/inmem.md
   - Delivery:
     - Rest API: adapters/webapi.md
+  - Domain:
+    - Secrets: domain.md
 
 docs_dir: docs
 plugins:
