@@ -1,5 +1,7 @@
 # TopSecret
 
+![TopSecret](static/screenshots/default.png)
+
 TopSecret is an encryption and decryption service with a REST API.
 
 It provides two primary methods of encryption:
@@ -114,3 +116,13 @@ curl -X POST http://localhost:8000/decrypt/HASH_VALUE \
   -H "Content-Type: application/json" \
   -d '{"passphrase": "mysecretpassword123"}'
 ```
+
+### Skins / Themes
+
+You can create your own skins by modifying the HTML and CSS files in the `static/themes` directory. Use `default.html` as base template and create your own theme by copying it to a new file, e.g., `mytheme.html`. Then, you can specify the theme by query parameter in the URL, e.g., `http://localhost:8000/encrypt?theme=mytheme` or override `default.html` with your
+custom skin. 
+
+Here are some screenshots of built-in themes:
+
+![TopSecret](static/screenshots/default.png)
+
