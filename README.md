@@ -21,7 +21,7 @@ If you find this project useful, consider supporting its development:
 
 ### Prerequisites
 
-- Python 3.10 or higher and `make` installed.
+0- Python 3.10 or higher and `make` installed.
 
 1- Install `uv` (Linux and MacOS)
 ```bash
@@ -44,12 +44,12 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/edvm/secrets-py.git
-cd secrets-py 
+cd secrets-py
 ```
 
 ### Using the Makefile
 
-The project includes a Makefile trying to make your life easier. You can use it to automate common tasks. 
+The project includes a Makefile trying to make your life easier. You can use it to automate common tasks.
 
 Be sure to have `make` and `uv` installed.
 
@@ -78,7 +78,7 @@ After installation, start the API server:
 make run
 ```
 
-The API will be available at http://localhost:8000.o
+The API will be available at http://localhost:8000.
 
 ### Running with Docker Compose
 If you prefer to run the API using Docker Compose, you can use the provided `compose.yml` file.
@@ -88,12 +88,6 @@ If you prefer to run the API using Docker Compose, you can use the provided `com
 docker compose up --build
 ```
 2. Access the API at http://localhost:8000.
-
-## Testing the API
-
-### Using the API Documentation
-
-Visit http://localhost:8000/docs for an interactive Swagger UI to test the API endpoints.
 
 ### Using curl
 
@@ -113,25 +107,10 @@ curl -X POST http://localhost:8000/encrypt \
 #### Testing the decrypt endpoint
 ```sh
 # Example 3: Decrypt a secret (replace HASH_VALUE with the actual hash from the encrypt response)
-curl -X GET http://localhost:8000/decrypt/HASH_VALUE
+curl -X POST http://localhost:8000/decrypt/HASH_VALUE
 
 # Example 4: Decrypt a passphrase-protected secret
-curl -X GET "http://localhost:8000/decrypt/HASH_VALUE?passphrase=mysecretpassword123"
-```
-
-#### Example workflow
-
-```sh
-# Step 1: Encrypt a secret and capture the hash
-RESPONSE=$(curl -s -X POST http://localhost:8000/encrypt \
+curl -X POST http://localhost:8000/decrypt/HASH_VALUE \
   -H "Content-Type: application/json" \
-  -d '{"secret": "My super secret info"}'
-)
-
-# Step 2: Extract the hash from the response (requires jq)
-HASH=$(echo $RESPONSE | jq -r '.hash')
-echo "Hash: $HASH"
-
-# Step 3: Decrypt using the hash
-curl -X GET http://localhost:8000/decrypt/$HASH
+  -d '{"passphrase": "mysecretpassword123"}'
 ```
