@@ -11,6 +11,11 @@ It provides two primary methods of encryption:
 
 The project includes a FastAPI web service that expose encryption functionality through HTTP endpoints, allowing users to encrypt sensitive information and share decryption URLs.
 
+
+## Documentation
+
+Project documentation is available at [https://edvm.github.io/secrets-py/](https://edvm.github.io/secrets-py/).
+
 ## Sponsorship
 
 A special thanks to [Hamkee](https://hamkee.net/) for sponsoring the project and providing hosting services.

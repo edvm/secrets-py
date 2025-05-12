@@ -1,6 +1,6 @@
 site_name: Top secret documentation
 repo_url: https://github.com/edvm/secrets-py.git
-site_url: https://github.com/edvm/secrets-py.git
+site_url: https://edvm.github.io/secrets-py/
 site_description: topsecret
 site_author: Emiliano Dalla Verde Marcozzi 
 edit_uri: edit/main/docs/
@@ -19,7 +19,7 @@ nav:
   - Domain:
     - Secrets: domain.md
 
-docs_dir: docs
+docs_dir: docs-md
 plugins:
   - search
   - mkdocstrings:
