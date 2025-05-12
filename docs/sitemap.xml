@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://edvm.github.io/secrets-py/</loc>
+         <lastmod>2025-05-12</lastmod>
+    </url>
+    <url>
+         <loc>https://edvm.github.io/secrets-py/domain/</loc>
+         <lastmod>2025-05-12</lastmod>
+    </url>
+    <url>
+         <loc>https://edvm.github.io/secrets-py/adapters/webapi/</loc>
+         <lastmod>2025-05-12</lastmod>
+    </url>
+    <url>
+         <loc>https://edvm.github.io/secrets-py/infra/cipher/aes/</loc>
+         <lastmod>2025-05-12</lastmod>
+    </url>
+    <url>
+         <loc>https://edvm.github.io/secrets-py/infra/storage/inmem/</loc>
+         <lastmod>2025-05-12</lastmod>
+    </url>
+    <url>
+         <loc>https://edvm.github.io/secrets-py/services/encryption/</loc>
+         <lastmod>2025-05-12</lastmod>
+    </url>
+</urlset>
